@@ -23,12 +23,12 @@
 # GPIO Control
 #-v $(USER_PROJECT_VERILOG)/rtl/gpio_control/gpio_control_wb.v
 #-v $(USER_PROJECT_VERILOG)/rtl/gpio_control/gpio_control_wrapper.v
-#-v $(USER_PROJECT_VERILOG)/rtl/gpio_control/gpio_control.sv
+-v $(USER_PROJECT_VERILOG)/rtl/gpio_control/gpio_control.sv
  
 # LA Control
 #-v $(USER_PROJECT_VERILOG)/rtl/la_control/la_control_wb.v
 #-v $(USER_PROJECT_VERILOG)/rtl/la_control/la_control_wrapper.v
-#-v $(USER_PROJECT_VERILOG)/rtl/la_control/la_control.sv
+-v $(USER_PROJECT_VERILOG)/rtl/la_control/la_control.sv
 
 # Sample Team project
 #-v $(USER_PROJECT_VERILOG)/rtl/sample_team_proj/sample_team_proj_WB.v
