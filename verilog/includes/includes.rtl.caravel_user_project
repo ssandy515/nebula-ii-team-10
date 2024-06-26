@@ -18,7 +18,6 @@
 #-v $(USER_PROJECT_VERILOG)/rtl/user_proj_example.v
 #-v $(USER_PROJECT_VERILOG)/rtl/nebula_ii.v
 #-v $(USER_PROJECT_VERILOG)/rtl/wb_interconnect.sv
-#-v $(USER_PROJECT_VERILOG)/rtl/wb_wrapper.vh
 
 # Wishbone Bus Wrap includes
 -v $(USER_PROJECT_VERILOG)/rtl/wb_wrapper.vh
