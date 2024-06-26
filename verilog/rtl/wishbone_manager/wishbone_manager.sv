@@ -5,12 +5,6 @@ Author: Matthew Erlichson
 */
 
 //states for the 3 state bus state machine
-typedef enum [1:0] {
-    IDLE,
-    WRITE,
-    READ
- } state;
-
 
 module wishbone_manager(
     //clock and reset of course
@@ -39,6 +33,12 @@ module wishbone_manager(
     output logic [31:0] CPU_DAT_O,
     output logic        BUSY_O
 );
+
+typedef enum logic[1:0] {
+    IDLE,
+    WRITE,
+    READ
+ } state;
 
 
 state curr_state;
@@ -91,6 +91,14 @@ end
 always_comb begin
     next_state = curr_state;
 
+    next_ADR_O  = ADR_O;
+    next_DAT_O  = DAT_O;
+    next_SEL_O  = SEL_O;
+    next_WE_O   = WE_O;
+    next_STB_O  = STB_O;
+    next_CYC_O  = CYC_O;
+    next_BUSY_O = BUSY_O;    
+    
     case(curr_state)
         IDLE: begin
             if(WRITE_I && !READ_I) begin
