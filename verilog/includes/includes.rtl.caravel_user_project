@@ -28,11 +28,6 @@
 # Wishbone Manager Control
 #-v $(USER_PROJECT_VERILOG)/rtl/wishbone_manager/wishbone_manager.sv
 
-# Wishbone Bus Wrap includes
--v $(USER_PROJECT_VERILOG)/rtl/wb_wrapper.vh
--v $(USER_PROJECT_VERILOG)/dv/tb_macros.vh
-#-v $(USER_PROJECT_VERILOG)/dv/wb_tasks.vh
-
 # GPIO Control
 #-v $(USER_PROJECT_VERILOG)/rtl/gpio_control/gpio_control_WB.v
 #-v $(USER_PROJECT_VERILOG)/rtl/gpio_control/gpio_control_Wrapper.v
