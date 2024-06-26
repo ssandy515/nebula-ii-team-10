@@ -3,10 +3,14 @@
 * DESIGNS => 0x 30 (01-NUM_TEAMS) XXXX
 * LA      => 0x 3100 XXXX
 * GPIO    => 0x 3200 XXXX
+* 
+* NOTE:
+* Team 0 DOES NOT exist, so no design is
+* selected when wbs_adr_i[23:16] is 0x00
 */
 
 module wb_interconnect #(
-    parameter NUM_TEAMS = 1
+    parameter NUM_TEAMS = 12
 )
 (
     // Wishbone Slave ports (only the ones we need)
@@ -16,7 +20,7 @@ module wb_interconnect #(
     output logic [31:0] wbs_dat_o,
 
     // Strobe Signals
-    output logic designs_stb [NUM_TEAMS:1],
+    output logic designs_stb [NUM_TEAMS:0],
     output logic la_control_stb,
     output logic gpio_control_stb,
 
@@ -24,12 +28,12 @@ module wb_interconnect #(
     output logic [31:0] adr_truncated,
 
     // WB dat_o Signals
-    input logic [31:0] designs_dat_o [NUM_TEAMS:1],
+    input logic [31:0] designs_dat_o [NUM_TEAMS:0],
     input logic [31:0] la_control_dat_o,
     input logic [31:0] gpio_control_dat_o,
 
     // WB ack_o Signals
-    input logic designs_ack_o [NUM_TEAMS:1],
+    input logic designs_ack_o [NUM_TEAMS:0],
     input logic la_control_ack_o,
     input logic gpio_control_ack_o
 );
@@ -43,7 +47,7 @@ module wb_interconnect #(
 
     // Multiplexing of strobe signals - Team Designs
     always_comb begin
-        for (integer i = 1; i <= NUM_TEAMS; i += 1) begin
+        for (integer i = 0; i <= NUM_TEAMS; i += 1) begin
             designs_stb[i] = (wbs_adr_i[31:24] == 8'h30 && wbs_adr_i[23:16] == i[7:0]) ? wbs_stb_i : 'b0;
         end
     end
@@ -53,7 +57,7 @@ module wb_interconnect #(
         wbs_dat_o = '0;
         casez(wbs_adr_i[31:16])
             16'h30??: begin
-                for (integer i = 1; i <= NUM_TEAMS; i += 1) begin
+                for (integer i = 0; i <= NUM_TEAMS; i += 1) begin
                     if (wbs_adr_i[23:16] == i[7:0]) wbs_dat_o = designs_dat_o[i];
                 end
             end
@@ -67,7 +71,7 @@ module wb_interconnect #(
         wbs_ack_o = '0;
         casez(wbs_adr_i[31:16])
             16'h30??: begin
-                for (integer i = 1; i <= NUM_TEAMS; i += 1) begin
+                for (integer i = 0; i <= NUM_TEAMS; i += 1) begin
                     if (wbs_adr_i[23:16] == i[7:0]) wbs_ack_o = designs_ack_o[i];
                 end
             end
