@@ -28,8 +28,9 @@ module gpio_control_Wrapper #(
     output wire [37:0] gpio_oeb
 );
 
-    gpio_control_WB gpio_control_WB (
-        .ext_clk(wb_clk_i),
+    gpio_control_WB #(
+        .NUM_TEAMS(NUM_TEAMS)
+    ) gpio_control_WB (
         .clk_i(wb_clk_i),
         .rst_i(wb_rst_i),
         .adr_i(wbs_adr_i),

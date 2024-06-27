@@ -26,10 +26,13 @@
 
 // `include			"wb_wrapper.vh"
 
-module gpio_control_WB (
+module gpio_control_WB #(
+    parameter NUM_TEAMS = 12
+)
+(
 	`WB_SLAVE_PORTS,
-	input	wire	[38-1:0]	io_oeb [12:0],
-	input	wire	[38-1:0]	io_out [12:0],
+	input	wire	[38-1:0]	io_oeb [NUM_TEAMS:0],
+	input	wire	[38-1:0]	io_out [NUM_TEAMS:0],
 	output	wire	[38-1:0]	muxxed_io_oeb,
 	output	wire	[38-1:0]	muxxed_io_out
 );
@@ -72,7 +75,9 @@ module gpio_control_WB (
 	assign	pin_32to37_sel = PIN_32TO37_SEL_VAL_REG;
 	`WB_REG(PIN_32TO37_SEL_VAL_REG, 0, 24)
 
-	gpio_control instance_to_wrap (
+	gpio_control #(
+        .NUM_TEAMS(NUM_TEAMS)
+    ) instance_to_wrap (
 		.clk(clk),
 		.nrst(nrst),
 		.pin_0to7_sel(pin_0to7_sel),

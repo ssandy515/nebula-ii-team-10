@@ -168,6 +168,7 @@ custom_run_verify =\
     export MCW_ROOT=$(MCW_ROOT) &&\
 	export GCC_PREFIX=riscv64-unknown-elf &&\
 	export GCC_PATH=/package/riscv-gnu-toolchain/bin/ &&\
+	export USER_PROJECT_VERILOG=$(PWD)/verilog &&\
     cd verilog/dv/$* && export SIM=${SIM} && make
 
 .PHONY: harden
@@ -469,7 +470,7 @@ bus-wrap-initialize:
 	cd $(PWD)/verilog/rtl &&\
 	make initialize
 
-#Generate YAML files for teams
+#Generate Bus Wrap Verilog files for teams
 .PHONY: bus-wrap-generate
 bus-wrap-generate:
 	cd $(PWD)/verilog/rtl &&\

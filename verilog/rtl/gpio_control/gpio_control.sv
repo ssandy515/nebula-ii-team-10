@@ -5,11 +5,14 @@
 //needs to support 8 pins per pad
 
 
-module gpio_control(
+module gpio_control #(
+    parameter NUM_TEAMS = 12
+)
+(
     input logic clk,
     input logic nrst,
-    input logic [37:0] io_oeb [12:0],  
-    input logic [37:0] io_out [12:0],
+    input logic [37:0] io_oeb [NUM_TEAMS:0],  
+    input logic [37:0] io_out [NUM_TEAMS:0],
 
     //select lines that are being sent from a set of registers
     //the wishbone bus can write to
