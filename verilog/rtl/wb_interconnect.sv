@@ -46,14 +46,14 @@ module wb_interconnect #(
     assign gpio_control_stb = (wbs_adr_i[31:16] == 16'h3200) ? wbs_stb_i : 'b0;
 
     // Multiplexing of strobe signals - Team Designs
-    always_comb begin
+    always @(*) begin
         for (integer i = 0; i <= NUM_TEAMS; i += 1) begin
             designs_stb[i] = (wbs_adr_i[31:24] == 8'h30 && wbs_adr_i[23:16] == i[7:0]) ? wbs_stb_i : 'b0;
         end
     end
 
     // Multiplexing for wbs_dat_o
-    always_comb begin
+    always @(*) begin
         wbs_dat_o = '0;
         casez(wbs_adr_i[31:16])
             16'h30??: begin
@@ -67,7 +67,7 @@ module wb_interconnect #(
     end
 
     // Multiplexing for wbs_ack_o
-    always_comb begin
+    always @(*) begin
         wbs_ack_o = '0;
         casez(wbs_adr_i[31:16])
             16'h30??: begin
