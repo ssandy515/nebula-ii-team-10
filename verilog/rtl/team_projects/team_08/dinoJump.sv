@@ -1,7 +1,7 @@
 module dinoJump( 
   input logic clk, nRst, button, 
   output logic [7:0] dinoY,
-  output logic dinoJumpGood 
+  output logic dinoJumpGood
 ); 
 
   logic [7:0] floorY = 8'd100; 
@@ -42,8 +42,8 @@ module dinoJump(
     end 
     else begin 
       en = 1'b0; 
-
     end 
+
     if(next_dinoY == onFloor) begin 
       en2 = 1'b1; 
     end 
@@ -66,7 +66,7 @@ always_comb begin
       if(button) begin
         next_dinoDelay = dinoDelay + 1;
 
-        if(dinoDelay == 750000) begin
+        if(dinoDelay == 300000) begin
           next_dinoDelay = 0;
           maxdinoDelay = 1;
         end
@@ -97,7 +97,7 @@ always_comb begin
     if(en && maxdinoDelay) begin
       next_count = 0;
     end
-    else if (count == 750000) begin  
+    else if (count == 400000) begin  
       next_count = 0;  
       at_max = 1;  
     end 
@@ -106,8 +106,8 @@ always_comb begin
     end
 
     if(en && maxdinoDelay) begin 
-        next_v = 8'd16;
-        next_dinoY = dinoY + 20;
+        next_v = 8'd10;
+        next_dinoY = dinoY + 11;
     end 
     else if (at_max) begin 
       next_dinoY = dinoY + v; 
@@ -117,7 +117,7 @@ always_comb begin
       end
 
       else begin 
-        next_v = v - 4; 
+        next_v = v - 1; 
       end 
     end
 
