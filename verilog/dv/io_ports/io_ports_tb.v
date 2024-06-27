@@ -19,6 +19,8 @@
 
 module io_ports_tb;
 	reg clock;
+	wire clock2;
+	assign clock2 = clock;
 	reg RSTB;
 	reg CSB;
 	reg power1, power2;
@@ -242,7 +244,7 @@ module io_ports_tb;
 		.vccd2	  (VDD1V8),
 		.vssd1	  (VSS),
 		.vssd2	  (VSS),
-		.clock    (clock),
+		.clock    (clock2),
 		.gpio     (gpio),
 		.mprj_io  (mprj_io),
 		.flash_csb(flash_csb),

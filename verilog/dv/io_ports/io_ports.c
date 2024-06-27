@@ -19,6 +19,9 @@
 #include <defs.h>
 #include <stub.c>
 
+#define reg_mprj_slave (*(volatile uint32_t*)0x30000000)
+#define reg_gpio_control_slave (*(volatile uint32_t*)0x32000000)
+
 /*
 	IO Test:
 		- Configures MPRJ lower 8-IO pins as outputs
@@ -67,9 +70,15 @@ void main()
 	reg_mprj_io_5 =  GPIO_MODE_USER_STD_OUTPUT;
 	reg_mprj_io_6 =  GPIO_MODE_USER_STD_OUTPUT;
 	reg_mprj_io_7 =  GPIO_MODE_USER_STD_OUTPUT;
+	
 
 	/* Apply configuration */
 	reg_mprj_xfer = 1;
 	while (reg_mprj_xfer == 1);
+
+	reg_spi_enable = 1;
+	reg_wb_enable = 1;
+
+	reg_gpio_control_slave = 0x00000007;
 }
 
