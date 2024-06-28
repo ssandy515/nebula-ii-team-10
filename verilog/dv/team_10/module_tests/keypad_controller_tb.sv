@@ -4,7 +4,7 @@
 
 `timescale 1 ms / 100us
 
-module tb_keypad_controller ();
+module keypad_controller_tb ();
 
     // Test bench parameters
     localparam CLK_PERIOD = 10; // 100 Hz clock

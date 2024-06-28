@@ -4,7 +4,7 @@ Description:
 
 `timescale 1ms / 100 us
 
-module tb_HostDisplay();
+module host_disp_tb ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk

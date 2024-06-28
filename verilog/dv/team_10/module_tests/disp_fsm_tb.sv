@@ -4,7 +4,7 @@ Descriuption: x
 
 `timescale 1ms / 100 us
 
-module tb_display_fsm ();
+module disp_fsm_tb ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk

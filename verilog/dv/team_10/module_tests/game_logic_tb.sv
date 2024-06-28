@@ -5,7 +5,7 @@ Finally, once the user either guesses the word, or gets 6 wrong questions, the g
 ends. 
 */
 
-module TBGame_Logic ();
+module game_logic_tb ();
 
 typedef enum logic [2:0] { 
     SET = 0, L0 = 1, 

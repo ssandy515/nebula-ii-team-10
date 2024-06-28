@@ -1,16 +1,19 @@
-/* Display FSM File
+/* Message Register File
 Descriuption: x
 */
 
 `timescale 1ms / 100 us
 
-module tb_display_fsm ();
+
+
+module msg_reg_tb ();
 
 // Testbench ports
 localparam CLK_PERIOD = 10; // 100 Hz clk
-logic tb_clk, tb_nRst, tb_ready;
-logic [7:0] tb_msg;
-logic [127:0] tb_row1, tb_row2;
+logic tb_clk, tb_nRst, tb_ready, tb_transmit_ready;
+logic [7:0] tb_data;
+logic tb_blue, tb_tx_ctrl;
+logic [7:0] tb_tx_byte;
 
 // Clock generation block
 always begin
@@ -20,20 +23,8 @@ always begin
     #(CLK_PERIOD / 2.0); 
 end
 
-//task that presses the button once
-task single_button_press;
-begin
-    @(negedge tb_clk);
-    tb_ready = 1'b1;
-    @(negedge tb_clk);
-    tb_ready = 1'b0;
-    @(posedge tb_clk);
-end
-endtask
-
-
-// Portmap
-Display_FSM tb_disp_fsm(.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .msg(tb_msg), .row1(tb_row1), .row2(tb_row2));
+// Portmap 
+msg_reg messsagetest(.clk(tb_clk), .nRst(tb_nRst), .ready(tb_ready), .transmit_ready(tb_transmit_ready), .data(tb_data), .blue(tb_blue), .tx_ctrl(tb_tx_ctrl), .tx_byte(tb_tx_byte));
 
 initial begin 
     // Signal dump
@@ -42,11 +33,13 @@ initial begin
 
     // Initialize test bench signals
     tb_nRst = 1'b1;
+    tb_data = 8'd5;
     tb_ready = 0;
-    tb_msg = 8'b01000110; // F
+    tb_transmit_ready = 0;
 
     // Wait some time before starting first test case
     #(0.1);
+
 
     // ***********************************
     // Test Case 0: Power-on-Reset 
@@ -60,37 +53,40 @@ initial begin
     @(posedge tb_clk);
     #(CLK_PERIOD * 2);
 
-    // ***********************************
-    // Test Case 1: Ready Low
-    // ***********************************
-    tb_ready = 0;
-    #(CLK_PERIOD * 2);
-    tb_msg = 8'b01000110; // F
-    #CLK_PERIOD;
 
     // ***********************************
-    // Test Case 2: Ready High
+    // Test Case 1: Take Input, Send
     // ***********************************
-    tb_msg = 8'b01000001; // A
-    #CLK_PERIOD;
     tb_ready = 1;
+    #(CLK_PERIOD);
+    tb_transmit_ready = 1;
     #(CLK_PERIOD * 2);
+
+
+    // ***********************************
+    // Test Case 2: Do not take input
+    // ***********************************
     tb_ready = 0;
-    #(CLK_PERIOD * 2);
+    tb_transmit_ready = 0;
+
+    tb_nRst = 0;
+    #(CLK_PERIOD);
+    tb_nRst = 1;
+    #(CLK_PERIOD);
+
+    #(CLK_PERIOD * 3);
+
+
+
+    // ***********************************
+    // Test Case 3: Take Input, Dont Send 
+    // ***********************************
+    tb_ready = 1;
+    tb_transmit_ready = 0;
+    #(CLK_PERIOD * 2)
     
-
-    // ***********************************
-    // Test Case 3: Ready flip
-    // ***********************************
-    tb_ready = 0;
-    tb_ready = 1;
-    tb_ready = 0;
-    tb_msg = 8'b01000011; // C
-    #(CLK_PERIOD *1);
-    tb_ready = 1;
-    #(CLK_PERIOD * 0.5);
-    tb_ready = 0;
-    #(CLK_PERIOD * 2);
+    tb_transmit_ready = 1;
+    #(CLK_PERIOD);
 
     $finish;
 end
