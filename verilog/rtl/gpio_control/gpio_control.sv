@@ -37,13 +37,10 @@ integer idx_32to37;
 
 
 always @(*) begin
-
-    muxxed_io_oeb[7:0] = 8'b0;
-    muxxed_io_out[7:0] = pin_0to7_sel[7:0];
-    // for(idx_0to7 = 1; idx_0to7 <= 7; idx_0to7++) begin
-    //     muxxed_io_oeb[idx_0to7] = io_oeb[pin_0to7_sel[idx_0to7*4 +: 4]][idx_0to7[5:0]];
-    //     muxxed_io_out[idx_0to7] = io_out[pin_0to7_sel[idx_0to7*4 +: 4]][idx_0to7[5:0]];
-    // end
+    for(idx_0to7 = 0; idx_0to7 <= 7; idx_0to7++) begin
+        muxxed_io_oeb[idx_0to7] = io_oeb[pin_0to7_sel[idx_0to7*4 +: 4]][idx_0to7[5:0]];
+        muxxed_io_out[idx_0to7] = io_out[pin_0to7_sel[idx_0to7*4 +: 4]][idx_0to7[5:0]];
+    end
     for(idx_8to15 = 0; idx_8to15 <= 7; idx_8to15++) begin
         muxxed_io_oeb[idx_8to15 + 8] = io_oeb[pin_8to15_sel[idx_8to15*4 +: 4]][idx_8to15[5:0] + 8];
         muxxed_io_out[idx_8to15 + 8] = io_out[pin_8to15_sel[idx_8to15*4 +: 4]][idx_8to15[5:0] + 8];
