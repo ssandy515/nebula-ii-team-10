@@ -18,7 +18,7 @@ module la_control_Wrapper #(
     output wire [31:0] wbs_dat_o,
     
     // GPIOs
-    input wire [127:0] designs_la_data_out [NUM_TEAMS:0], // Breakout Board Pins
+    input wire [128*(NUM_TEAMS+1)-1:0] designs_la_data_out_flat, // Breakout Board Pins
 
     output wire [127:0] la_data_out
 );
@@ -36,7 +36,7 @@ module la_control_Wrapper #(
         .ack_o(wbs_ack_o),
         .we_i(wbs_we_i),
         .IRQ(),
-        .la_dat(designs_la_data_out),
+        .designs_la_data_out_flat(designs_la_data_out_flat),
         .muxxed_la_dat(la_data_out)
     );
 

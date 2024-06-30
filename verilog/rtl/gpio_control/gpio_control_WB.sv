@@ -31,8 +31,8 @@ module gpio_control_WB #(
 )
 (
 	`WB_SLAVE_PORTS,
-	input	wire	[38-1:0]	io_oeb [NUM_TEAMS:0],
-	input	wire	[38-1:0]	io_out [NUM_TEAMS:0],
+	input	wire	[38*(NUM_TEAMS+1)-1:0] designs_gpio_oeb_flat,
+	input	wire	[38*(NUM_TEAMS+1)-1:0] designs_gpio_out_flat,
 	output	wire	[38-1:0]	muxxed_io_oeb,
 	output	wire	[38-1:0]	muxxed_io_out
 );
@@ -85,8 +85,8 @@ module gpio_control_WB #(
 		.pin_16to23_sel(pin_16to23_sel),
 		.pin_24to31_sel(pin_24to31_sel),
 		.pin_32to37_sel(pin_32to37_sel),
-		.io_oeb(io_oeb),
-		.io_out(io_out),
+		.designs_gpio_oeb_flat(designs_gpio_oeb_flat),
+		.designs_gpio_out_flat(designs_gpio_out_flat),
 		.muxxed_io_oeb(muxxed_io_oeb),
 		.muxxed_io_out(muxxed_io_out)
 	);
