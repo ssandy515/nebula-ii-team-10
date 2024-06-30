@@ -7,7 +7,10 @@ module gpio_control_Wrapper #(
     parameter NUM_TEAMS = 12
 )
 (
-    
+`ifdef USE_POWER_PINS
+    inout vccd1,	// User area 1 1.8V supply
+    inout vssd1,	// User area 1 digital ground
+`endif
     // Wishbone Slave ports (WB MI A)
     input wire wb_clk_i,
     input wire wb_rst_i,
