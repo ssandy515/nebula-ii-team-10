@@ -68,6 +68,10 @@ module nebula_ii (
 
     // Sample Project Instance
     sample_team_proj_Wrapper sample_team_proj_Wrapper (
+`ifdef USE_POWER_PINS
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+`endif
         //Wishbone Slave and user clk, rst
         .wb_clk_i(wb_clk_i),
         .wb_rst_i(wb_rst_i),
@@ -110,6 +114,10 @@ module nebula_ii (
         .NUM_TEAMS(NUM_TEAMS)
     ) gpio_control_wrapper (
         // Wishbone Slave ports (WB MI A)
+`ifdef USE_POWER_PINS
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+`endif
         .wb_clk_i(wb_clk_i),
         .wb_rst_i(wb_rst_i),
         .wbs_stb_i(gpio_control_stb),
@@ -142,6 +150,10 @@ module nebula_ii (
         .NUM_TEAMS(NUM_TEAMS)
     ) la_control_wrapper (
         // Wishbone Slave ports (WB MI A)
+`ifdef USE_POWER_PINS
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+`endif
         .wb_clk_i(wb_clk_i),
         .wb_rst_i(wb_rst_i),
         .wbs_stb_i(la_control_stb),
@@ -171,6 +183,10 @@ module nebula_ii (
     wb_interconnect #(
         .NUM_TEAMS(NUM_TEAMS)
     ) wb_interconnect (
+`ifdef USE_POWER_PINS
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+`endif
         // Wishbone Slave ports (only the ones we need)
         .wbs_stb_i(wbs_stb_i),
         .wbs_adr_i(wbs_adr_i),
