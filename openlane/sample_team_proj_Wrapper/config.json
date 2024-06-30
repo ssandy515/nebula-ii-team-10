@@ -1,5 +1,5 @@
 {
-    "DESIGN_NAME": "sample_team_proj",
+    "DESIGN_NAME": "sample_team_proj_Wrapper",
     "DESIGN_IS_CORE": 0,
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/wb_wrapper.vh",
@@ -19,7 +19,7 @@
     "FP_PDN_CORE_RING": 0,
     "RT_MAX_LAYER": "met4",
     "FP_SIZING": "absolute",
-    "DIE_AREA": "0 0 500 500",
+    "DIE_AREA": "0 0 550 550",
     "pdk::sky130*": {
         "scl::sky130_fd_sc_hd": {
             "CLOCK_PERIOD": 100
