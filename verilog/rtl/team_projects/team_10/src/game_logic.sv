@@ -4,7 +4,7 @@ Then the next state compares the user input with the different letters in the wo
 Finally, once the user either guesses the word, or gets 6 incorrect questions, the game
 ends. 
 */
-module Game_Logic (
+module game_logic (
     input logic clk, nRst, gameEnd,
     input logic [7:0] guess,
     input logic [39:0] setWord,

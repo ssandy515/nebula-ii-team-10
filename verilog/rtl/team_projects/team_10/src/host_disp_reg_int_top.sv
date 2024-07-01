@@ -2,7 +2,7 @@
 Descriuption: x
 */
 
-module INT_TOP_Reg_HostDisp(
+module host_disp_reg_int_top (
     input logic clk, nRst, ready, rec_ready, //Input of UART_Rx
     input logic toggle_state, gameEnd_host,
     input logic [7:0] msg,
