@@ -105,13 +105,17 @@ endif
 
 
 
+
+# To avoid erasing the nanoHUB's OL2 installation, I'm removing this from target below.
+# You can add it back later when running outside nanoHUB:
+#if [ -d "$(OPENLANE2_ROOT)" ]; then\
+#		echo "Deleting exisiting $(OPENLANE2_ROOT)" && \
+#		rm -rf $(OPENLANE2_ROOT) && sleep 2; \
+#	fi
+
 #https://openlane2.readthedocs.io/en/latest/getting_started/common/nix_installation/installation_win.html
 .PHONY: openlane2
 openlane2: check-openlane2-env
-	if [ -d "$(OPENLANE2_ROOT)" ]; then\
-		echo "Deleting exisiting $(OPENLANE2_ROOT)" && \
-		rm -rf $(OPENLANE2_ROOT) && sleep 2; \
-	fi
 	nix-env -f "<nixpkgs>" -iA cachix
 	sudo env PATH="$$PATH" cachix use openlane
 	-sudo pkill nix-daemon
@@ -125,10 +129,11 @@ ifeq ($(OPENLANE2_ROOT),)
 	@exit 1
 endif
 
+# Add quotations to command if not running in nanoHUB
 openlane_cmd = \
-	"openlane \
+	openlane \
 	--run-tag $(OPENLANE_RUN_TAG) \
-	$*/config.json"
+	$*/config.json
 openlane_cmd_interactive = "flow.tcl -it -file $$(realpath ./$*/interactive.tcl)"
 
 
@@ -141,7 +146,8 @@ $(designs) : % : ./%/config.json
 	mkdir -p ./$*/runs/$(OPENLANE_RUN_TAG) 
 	rm -rf ./$*/runs/$*
 	ln -s $$(realpath ./$*/runs/$(OPENLANE_RUN_TAG)) ./$*/runs/$*
-	nix-shell --run $(openlane_cmd) --pure $(OPENLANE2_ROOT)/shell.nix
+	$(openlane_cmd)
+#If not in nanoHUB, run this instead: nix-shell --run $(openlane_cmd) --pure $(OPENLANE2_ROOT)/shell.nix
 #https://github.com/efabless/caravel_user_project_ol2/blob/main/openlane/Makefile
 	@mkdir -p $(PROJECT_ROOT)/signoff/$*/
 	@cp $(PROJECT_ROOT)/openlane/$*/runs/$*/final/*.csv $(PROJECT_ROOT)/signoff/$*/
