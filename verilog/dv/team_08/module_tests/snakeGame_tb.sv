@@ -1,5 +1,5 @@
 `timescale 10ns/1ns
-module tb;
+module snakeGame_tb;
 
     localparam CLK_PERIOD = 100; // 12 MHz 
     localparam RESET_ACTIVE = 0;
@@ -11,9 +11,8 @@ module tb;
 
     // DUT Inputs
     logic tb_clk;
-    logic tb_nRst;
-    logic tb_button;
-    logic [7:0] tb_dinoY;
+    logic tb_up;
+    logic tb_rst;
 
     // Expected values for checks
 
@@ -27,19 +26,19 @@ module tb;
         @(negedge tb_clk); // synchronize to negedge edge so there are not hold or setup time violations
         
         // Activate reset
-        tb_nRst = RESET_ACTIVE;
+        tb_rst = RESET_ACTIVE;
 
         // Wait 2 clock cycles
         @(negedge tb_clk);
         @(negedge tb_clk);
 
         // Deactivate reset
-        tb_nRst = RESET_INACTIVE; 
+        tb_rst = RESET_INACTIVE; 
     end
     endtask
 
     // Check output values against expected values
-    task check_outputs;
+    /*task check_outputs;
         input logic [7:0] exp_dinoY; 
         //input logic exp_at_max; 
     begin
@@ -54,19 +53,32 @@ module tb;
         else
             $error("Incorrect tb_at_max value. Actual: %0d, Expected: %0d.", tb_at_max, exp_at_max);*/
 
-    end
-    endtask 
+    // end
+    // endtask 
 
     //////////
     // DUT //
     //////////
 
     // DUT Instance
-     dinoJump DUT (
+    snakeGame DUT (
         .clk(tb_clk),
-        .nRst(tb_nRst),
-        .button(tb_button),
-        .dinoY(tb_dinoY)
+        .rst(tb_rst),
+        .up(tb_up),
+        
+        // BELOW PORTS ARE NOT USED
+        .tft_sck(),
+        .tft_sdi(),
+        .tft_dc(),
+        .tft_reset(),
+        .tft_cs(),
+        .tft_sdo(),  
+        .leds(),
+        .dac_sdi(),
+        .dac_cs(),
+        .dac_sck(),
+        .test(),
+        .tftstate()
     );
 
     // Clock generation block
@@ -79,8 +91,8 @@ module tb;
 
     initial begin
         $dumpfile ("sim.vcd");
-        $dumpvars(0, tb);
-        tb_button = 0;
+        $dumpvars(0, snakeGame_tb);
+        tb_up = 0;
         // Initialize all test inputs
         #CLK_PERIOD;
 
@@ -88,65 +100,10 @@ module tb;
         reset_dut;
         #CLK_PERIOD;
 
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-        #CLK_PERIOD;
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-        #CLK_PERIOD;
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-        #CLK_PERIOD;
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-        #CLK_PERIOD;
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-        #CLK_PERIOD;
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-        #CLK_PERIOD;
-        tb_button = 1'b1;
-        #CLK_PERIOD;
-        tb_button = 1'b0;
-
-
-        #(15000000 * CLK_PERIOD);
-        check_outputs(8'd101);
-
-
-
-        //#(6000000 * CLK_PERIOD);
-        //check_outputs(8'd181);
-        //#(6000000 * CLK_PERIOD);
-        //check_outputs(8'd151);
-        //#(2000000 * CLK_PERIOD);
-
-        //tb_button = 1'b1;
-        //#CLK_PERIOD;
-        //tb_button = 1'b0;
-        //#(3000000 * CLK_PERIOD);
-        //tb_button = 1'b1;
-        //#CLK_PERIOD;
-        //tb_button = 1'b0;
-        //#(3000000 * CLK_PERIOD);
-        //check_outputs(8'd181);
-        //#(2000000 * CLK_PERIOD);
+        tb_up = 1'b0;
+        #(1000000000 * CLK_PERIOD);
 
         $finish;
     end
-
 
 endmodule
