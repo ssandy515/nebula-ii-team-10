@@ -39,9 +39,6 @@ module nebula_ii (
     
     assign irq = 3'b0; // TODO: use interrupt from sample project?
 
-    // Truncated address for each internal block
-    wire [31:0] adr_truncated;
-
     // WB slave stb_i inputs to all designs, GPIO control, LA control
     wire [NUM_TEAMS:0] designs_stb ;
     wire gpio_control_stb;
@@ -65,6 +62,33 @@ module nebula_ii (
     // IRQ from all designs
     wire [2:0] designs_irq[NUM_TEAMS:0];
 
+    //all WB peripherals ports (p for peripheral):
+    //input WB
+    wire                   wbs_stb_i_p;
+
+    wire                   wbs_cyc_i_p;
+    wire [NUM_TEAMS:0] wbs_cyc_i_proj; //Must be individualized per project
+    wire                   wbs_cyc_i_la;
+    wire                   wbs_cyc_i_gpio;
+    wire                   wbs_cyc_i_sram;
+    
+    wire                   wbs_we_i_p;
+    wire [3:0]             wbs_sel_i_p;
+    wire [31:0]            wbs_dat_i_p;
+    wire [31:0]            wbs_adr_i_p;
+    //output WB
+    wire                   wbs_ack_o_p;
+    wire [NUM_TEAMS:0] wbs_ack_o_proj; //Must be individualized per project
+    wire                   wbs_ack_o_la;
+    wire                   wbs_ack_o_gpio;
+    wire                   wbs_ack_o_sram;
+
+    wire                  [31:0] wbs_dat_o_p;
+    wire [NUM_TEAMS:0][31:0] wbs_dat_o_proj; //Must be individualized per project
+    wire                  [31:0] wbs_dat_o_la;
+    wire                  [31:0] wbs_dat_o_gpio;
+    wire                  [31:0] wbs_dat_o_sram;
+
     // Sample Project Instance
     sample_team_proj_Wrapper sample_team_proj_Wrapper (
     `ifdef USE_POWER_PINS
@@ -74,14 +98,14 @@ module nebula_ii (
         //Wishbone Slave and user clk, rst
         .wb_clk_i(wb_clk_i),
         .wb_rst_i(wb_rst_i),
-        .wbs_stb_i(designs_stb[1]),
-        .wbs_cyc_i(wbs_cyc_i),
-        .wbs_we_i(wbs_we_i),
-        .wbs_sel_i(wbs_sel_i),
-        .wbs_dat_i(wbs_dat_i),
-        .wbs_adr_i(adr_truncated),
-        .wbs_ack_o(designs_wbs_ack_o[1]),
-        .wbs_dat_o(designs_wbs_dat_o[1]),
+        .wbs_stb_i(wbs_stb_i_p),
+        .wbs_cyc_i(wbs_cyc_i_proj[1]),
+        .wbs_we_i(wbs_we_i_p),
+        .wbs_sel_i(wbs_sel_i_p),
+        .wbs_dat_i(wbs_dat_i_p),
+        .wbs_adr_i(wbs_adr_i_p),
+        .wbs_ack_o(wbs_ack_o_proj[1]),
+        .wbs_dat_o(wbs_dat_o_proj[1]),
 
         // Logic Analyzer - 2 pins used here
         .la_data_in(la_data_in),
@@ -119,14 +143,14 @@ module nebula_ii (
     `endif
         .wb_clk_i(wb_clk_i),
         .wb_rst_i(wb_rst_i),
-        .wbs_stb_i(gpio_control_stb),
-        .wbs_cyc_i(wbs_cyc_i),
-        .wbs_we_i(wbs_we_i),
-        .wbs_sel_i(wbs_sel_i),
-        .wbs_dat_i(wbs_dat_i),
-        .wbs_adr_i(adr_truncated),
-        .wbs_ack_o(gpio_wbs_ack_o),
-        .wbs_dat_o(gpio_wbs_dat_o),
+        .wbs_stb_i(wbs_stb_i_p),
+        .wbs_cyc_i(wbs_cyc_i_gpio),
+        .wbs_we_i(wbs_we_i_p),
+        .wbs_sel_i(wbs_sel_i_p),
+        .wbs_dat_i(wbs_dat_i_p),
+        .wbs_adr_i(wbs_adr_i_p),
+        .wbs_ack_o(wbs_ack_o_gpio),
+        .wbs_dat_o(wbs_dat_o_gpio),
         
         // GPIOs
         .designs_gpio_out_flat(designs_gpio_out_flat),
@@ -155,14 +179,14 @@ module nebula_ii (
     `endif
         .wb_clk_i(wb_clk_i),
         .wb_rst_i(wb_rst_i),
-        .wbs_stb_i(la_control_stb),
-        .wbs_cyc_i(wbs_cyc_i),
-        .wbs_we_i(wbs_we_i),
-        .wbs_sel_i(wbs_sel_i),
-        .wbs_dat_i(wbs_dat_i),
-        .wbs_adr_i(adr_truncated),
-        .wbs_ack_o(la_wbs_ack_o),
-        .wbs_dat_o(la_wbs_dat_o),
+        .wbs_stb_i(wbs_stb_i_p),
+        .wbs_cyc_i(wbs_cyc_i_la),
+        .wbs_we_i(wbs_we_i_p),
+        .wbs_sel_i(wbs_sel_i_p),
+        .wbs_dat_i(wbs_dat_i_p),
+        .wbs_adr_i(wbs_adr_i_p),
+        .wbs_ack_o(wbs_ack_o_la),
+        .wbs_dat_o(wbs_dat_o_la),
         
         // LA
         .designs_la_data_out_flat(designs_la_data_out_flat),
@@ -178,39 +202,100 @@ module nebula_ii (
         end
     end
 
-    // WB Interconnect
-    wb_interconnect #(
-        .NUM_TEAMS(NUM_TEAMS)
-    ) wb_interconnect (
+    // Wishbone Arbitrator
+    //everywhere with squigly brackets is where more manager signals can be concatinated
+    wishbone_arbitrator #(
+        .NUM_MANAGERS(1)
+    ) wb_arbitrator (
+        
     `ifdef USE_POWER_PINS
-            .vccd1(vccd1),	// User area 1 1.8V power
-            .vssd1(vssd1),	// User area 1 digital ground
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
     `endif
-        // Wishbone Slave ports (only the ones we need)
-        .wbs_stb_i(wbs_stb_i),
-        .wbs_adr_i(wbs_adr_i),
-        .wbs_ack_o(wbs_ack_o),
-        .wbs_dat_o(wbs_dat_o),
 
-        // Strobe Signals
-        .designs_stb(designs_stb),
-        .la_control_stb(la_control_stb),
-        .gpio_control_stb(gpio_control_stb),
+        .CLK(wb_clk_i),
+        .nRST(~wb_rst_i),
 
-        // Truncated Address (use only last 16 bits)
-        .adr_truncated(adr_truncated),
+        //manager to arbitrator, input
+        .A_ADR_I({wbs_adr_i}),
+        .A_DAT_I({wbs_dat_i}),
+        .A_SEL_I({wbs_sel_i}),
+        .A_WE_I({wbs_we_i}),
+        .A_STB_I({wbs_stb_i}),
+        .A_CYC_I({wbs_cyc_i}),
 
-        // WB dat_o Signals
-        .designs_wbs_dat_o_flat(designs_wbs_dat_o_flat),
-        .la_control_dat_o(la_wbs_dat_o),
-        .gpio_control_dat_o(gpio_wbs_dat_o),
+        //arbitrator to manager, output
+        .A_DAT_O({wbs_dat_o}),
+        .A_ACK_O({wbs_ack_o}),
 
-        // WB ack_o Signals
-        .designs_ack_o(designs_wbs_ack_o),
-        .la_control_ack_o(la_wbs_ack_o),
-        .gpio_control_ack_o(gpio_wbs_ack_o)
+        //arbitrator to peripheral, input
+        .DAT_I(wbs_dat_o_p),
+        .ACK_I(wbs_ack_o_p),
+
+        //arbitrator to peripheral, output
+        .ADR_O(wbs_adr_i_p),
+        .DAT_O(wbs_dat_i_p),
+        .SEL_O(wbs_sel_i_p),
+        .WE_O(wbs_we_i_p),
+        .STB_O(wbs_stb_i_p),
+        .CYC_O(wbs_cyc_i_p)
     );
 
+    // Wishbone Decoder
+    wishbone_decoder #(
+        .NUM_TEAMS(1)
+    ) wb_decoder (
+
+    `ifdef USE_POWER_PINS
+        .vccd1(vccd1),	// User area 1 1.8V power
+        .vssd1(vssd1),	// User area 1 digital ground
+    `endif
+        
+        .CLK(wb_clk_i),
+        .nRST(~wb_rst_i),
+
+        .wbs_adr_i_p(wbs_adr_i_p),
+
+        .wbs_ack_i_proj(wbs_ack_o_proj),
+        .wbs_ack_i_la  (wbs_ack_o_la),
+        .wbs_ack_i_gpio(wbs_ack_o_gpio),
+        .wbs_ack_i_sram(wbs_ack_o_sram),
+        .wbs_ack_o_p   (wbs_ack_o_p),
+
+        .wbs_dat_i_proj(wbs_dat_o_proj),
+        .wbs_dat_i_la  (wbs_dat_o_la),
+        .wbs_dat_i_gpio(wbs_dat_o_gpio),
+        .wbs_dat_i_sram(wbs_dat_o_sram),
+        .wbs_dat_o_p   (wbs_dat_o_p),
+
+        .wbs_cyc_i_p   (wbs_cyc_i_p),
+        .wbs_cyc_o_proj(wbs_cyc_i_proj),
+        .wbs_cyc_o_la  (wbs_cyc_i_la),
+        .wbs_cyc_o_gpio (wbs_cyc_i_gpio),
+        .wbs_cyc_o_sram(wbs_cyc_i_sram)
+    );
+
+    // SRAM
+    SRAM_1024x32 mprj (
+    `ifdef USE_POWER_PINS
+        .VPWR(vccd1),	// User area 1 1.8V power
+        .VGND(vssd1),	// User area 1 digital ground
+    `endif
+
+        .wb_clk_i(wb_clk_i),
+        .wb_rst_i(wb_rst_i),
+
+        // MGMT SoC Wishbone Slave
+
+        .wbs_stb_i(wbs_stb_i_p),
+        .wbs_cyc_i(wbs_cyc_i_sram),
+        .wbs_we_i(wbs_we_i_p),
+        .wbs_sel_i(wbs_sel_i_p),
+        .wbs_dat_i(wbs_dat_i_p),
+        .wbs_adr_i(wbs_adr_i_p),
+        .wbs_ack_o(wbs_ack_o_sram),
+        .wbs_dat_o(wbs_dat_o_sram)
+    );
 endmodule
 
 `default_nettype wire
