@@ -275,7 +275,7 @@ module nebula_ii (
     );
 
     // SRAM
-    SRAM_1024x32 mprj (
+    SRAM_1024x32 sram (
     `ifdef USE_POWER_PINS
         .VPWR(vccd1),	// User area 1 1.8V power
         .VGND(vssd1),	// User area 1 digital ground
