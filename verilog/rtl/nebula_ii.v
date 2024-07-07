@@ -86,6 +86,33 @@ module nebula_ii (
     assign wbs_ack_o_proj[0] = 1'b0;
     assign wbs_dat_o_proj[0] = 'b0;
 
+    //all WB peripherals ports (p for peripheral):
+    //input WB
+    wire                   wbs_stb_i_p;
+
+    wire                   wbs_cyc_i_p;
+    wire [NUM_TEAMS:0] wbs_cyc_i_proj; //Must be individualized per project
+    wire                   wbs_cyc_i_la;
+    wire                   wbs_cyc_i_gpio;
+    wire                   wbs_cyc_i_sram;
+    
+    wire                   wbs_we_i_p;
+    wire [3:0]             wbs_sel_i_p;
+    wire [31:0]            wbs_dat_i_p;
+    wire [31:0]            wbs_adr_i_p;
+    //output WB
+    wire                   wbs_ack_o_p;
+    wire [NUM_TEAMS:0] wbs_ack_o_proj; //Must be individualized per project
+    wire                   wbs_ack_o_la;
+    wire                   wbs_ack_o_gpio;
+    wire                   wbs_ack_o_sram;
+
+    wire                  [31:0] wbs_dat_o_p;
+    wire [NUM_TEAMS:0][31:0] wbs_dat_o_proj; //Must be individualized per project
+    wire                  [31:0] wbs_dat_o_la;
+    wire                  [31:0] wbs_dat_o_gpio;
+    wire                  [31:0] wbs_dat_o_sram;
+
     // Sample Project Instance
     // (replace this with your team design instance when testing)
     sample_team_proj_Wrapper sample_team_proj_Wrapper (
@@ -202,6 +229,7 @@ module nebula_ii (
     // end
 
     // Wishbone Arbitrator
+  
     //everywhere with squigly brackets is where more manager signals can be concatinated!!!
     wishbone_arbitrator #(
         .NUM_MANAGERS(1)
