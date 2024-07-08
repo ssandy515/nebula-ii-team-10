@@ -1,5 +1,4 @@
 
-
 module dinoJump( 
   input logic clk, nRst, button, 
   input state_t state,

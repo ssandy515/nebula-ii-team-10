@@ -27,7 +27,7 @@ module parallelDisplay (
     input logic [1:0] move_enable, // Enable signals for movement of each object
     input logic [7:0] dinoY,
     input logic [8:0] cactusX1, x_dist,
-    input logic [7:0] cactusH1, cactusH2,
+    input logic [8:0] cactusH1, cactusH2,
     input logic [7:0] v,
     output logic cs,
     output logic cd,
@@ -119,13 +119,13 @@ always_comb begin
     c1_x_start = cactusX1;
     c1_x_end = cactusX1 + 9'd20; 
     c1_y_start = 8'd101; 
-    c1_y_end = 8'd101 + cactusH1; 
+    c1_y_end = 9'd101 + cactusH1; 
     c1_color= 16'h07E0; // Green block
 
     c2_x_start = cactusX2;
     c2_x_end = cactusX2 + 9'd20; 
     c2_y_start = 8'd101; 
-    c2_y_end = 8'd101 + cactusH2; 
+    c2_y_end = 9'd101 + cactusH2; 
     c2_color= 16'h001F; // Blue block
 end
 
@@ -400,6 +400,7 @@ always_ff @(posedge clk, negedge rst) begin
                 idx <= 0;
                 state <= INIT;
             end
+            default: state <= SET;
         endcase 
     end 
 end 

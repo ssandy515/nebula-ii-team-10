@@ -1,5 +1,4 @@
 
-
 module random_generator(
     input logic clk,
     input logic rst_n,
@@ -45,20 +44,18 @@ module random_generator(
 
     // Combine outputs to form the final random number
     always_comb begin
-        feedback1 = 0;
-        feedback2 = 0;
-        n_lfsr1 = 0;
-        n_lfsr2 = 0;
-        rnd = 0;
+        feedback1 = lfsr1[1] ^ lfsr1[0];
+        feedback2 = lfsr2[1] ^ lfsr2[0];
+        n_lfsr1 = lfsr1;
+        n_lfsr2 = lfsr2;
+        rnd = lfsr1 ^ lfsr2;
 
         case(state)
 
             IDLE: begin
-                feedback1 = 0;
-                feedback2 = 0;
-                n_lfsr1 = 0;
-                n_lfsr2 = 0;
-                rnd = 0;
+                n_lfsr1 = 2'b11;
+                n_lfsr2 = 2'b10;
+                rnd = lfsr1 ^ lfsr2;
             end
             
             RUN: begin
@@ -84,27 +81,18 @@ module random_generator(
             end
 
             OVER: begin
-                feedback1 = 0;
-                feedback2 = 0;
-                n_lfsr1 = 0;
-                n_lfsr2 = 0;
-                rnd = 0;
+                n_lfsr1 = 2'b11;
+                n_lfsr2 = 2'b10;
             end
 
             WIN: begin
-                feedback1 = 0;
-                feedback2 = 0;
-                n_lfsr1 = 0;
-                n_lfsr2 = 0;
-                rnd = 0;
+                n_lfsr1 = 2'b11;
+                n_lfsr2 = 2'b10;
             end
 
             default: begin
-                feedback1 = 0;
-                feedback2 = 0;
                 n_lfsr1 = 0;
                 n_lfsr2 = 0;
-                rnd = 0;
             end
 
         endcase

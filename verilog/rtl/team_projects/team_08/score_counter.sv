@@ -40,7 +40,7 @@ always_comb begin
   next_state = state;
   n_score = score;
   n_bcd_ones = 0;
-  n_bcd_tens = 0;
+  n_bcd_tens = 1;
   deconcatenate = 0;
   
 
@@ -50,10 +50,14 @@ IDLE: begin
 n_score = 10;
 n_bcd_ones = 0;
 n_bcd_tens = 1;
-deconcatenate = 0;
+deconcatenate = deconcatenate;
 end
 
 RUN: begin
+  n_score = score;
+  n_bcd_ones = bcd_ones;
+  n_bcd_tens = bcd_tens;
+  deconcatenate = 0;
 if(det) begin
   n_score = score - 1;    
 end
@@ -64,7 +68,7 @@ if(slow_clock) begin
   else if(score == 99) begin
     n_score = score;
   end
-
+end
 
 
   if(n_score > 89) begin
@@ -110,7 +114,7 @@ if(slow_clock) begin
   else if(n_score > 9) begin
     deconcatenate = n_score - 10;
     n_bcd_ones = deconcatenate[3:0];
-    n_bcd_tens = 0;
+    n_bcd_tens = 1;
   end
   else begin
     deconcatenate = n_score;
@@ -120,19 +124,11 @@ if(slow_clock) begin
 
 end
 
-else begin
-  n_score = score;
-  n_bcd_ones = 0;
-  n_bcd_tens = 0;
-  deconcatenate = 0;
-end
-end
-
 WIN: begin
   n_score = score;
   n_bcd_ones = 9;
   n_bcd_tens = 9;
-  deconcatenate = 0;
+  deconcatenate = deconcatenate;
 end
 
 OVER: begin
@@ -145,8 +141,8 @@ end
 default: begin
   n_score = 10;
   n_bcd_ones = 0;
-  n_bcd_tens = 0;
-  deconcatenate = 0;
+  n_bcd_tens = 1;
+  deconcatenate = deconcatenate;
 end
 endcase
 

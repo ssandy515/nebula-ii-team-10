@@ -21,7 +21,7 @@ module GameState (
 //state transition logic
 always_ff @(posedge clk, negedge reset) begin
   if(!reset) begin
-    state <= IDLE;
+    state <= 0;
   end else begin
     state <= next_state;
   end
@@ -46,6 +46,8 @@ always_comb begin
     else if (score == 99) begin
       next_state = WIN;
     end
+
+
     end
     
     WIN: begin
