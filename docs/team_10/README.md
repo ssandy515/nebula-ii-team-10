@@ -1,11 +1,14 @@
 # STARS 2024 Design Final Project
 
 ## TEAM NAME
-* Team Member 1 Name
-* Team Member 2 Name
-* Team Member 3 Name
-* Team Member 4 Name
-* Peer Mentor Name
+Team Members:
+* Adam Grendys
+* Justin Sanchez
+* Sandeep Saravanakumar
+* Yejin Oh 
+
+Peer Mentor:
+* Harnoor Cheema
 
 ## Project Type
 Short (2-3 sentences) project description
