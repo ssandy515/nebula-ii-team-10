@@ -1,4 +1,3 @@
-
 module uart_Tx
 #(
     parameter Clkperbaud = 1041
