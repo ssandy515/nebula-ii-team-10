@@ -32,27 +32,12 @@ module team_10 (
     // All outputs must have a value even if not used
     assign la_data_out = 128'b0;
     assign gpio_out = 34'b0; //Inputs, but set low anyways
-    assign gpio_oeb = '1;//All 1's inputs
+    assign gpio_oeb = (en) ? (34'b1000000001111100001100000000111111) : (34'b1111111111111111111111111111111111); //All 1's inputs
+    
     /*
     * Place code and sub-module instantiations here.
     */
-
-    // Main
-
-module top (
-    // FPGA Ports
-    input logic hz10M, reset, 
-    input  logic [20:0] pb,
-    output logic [7:0] left, right, ss7, ss6, ss5, ss4, ss3, ss2, ss1, ss0,
-    output logic red, green, blue,
-
-    // UART ports
-    output logic [7:0] txdata,
-    input  logic [7:0] rxdata,
-    output logic txclk, rxclk,
-    input  logic txready, rxready
-
-);
+// Main
 // Local Variable Declarations for both player and host 
 logic new_clk, useless; // Clock output signal from clock divider
 
@@ -77,22 +62,22 @@ logic [2:0] state1, state2;
 // Global 
 // ***********
 always_comb begin
-    if (pb[19]) begin
-        ss7 = lcd_data_player;
-        left[4:1] = play_col;
+    if (gpio_in[33]) begin // pb[19]
+        gpio_out[13:6] = lcd_data_player; // ss7
+        gpio_out[32:29] = play_col; // left[4:1]
         final_row1 = play_row1;
         final_row2 = play_row2;
         final_state = 8'b01010000;
     end else begin
-        ss7 = lcd_data_host;
-        left[4:1] = host_col;
+        gpio_out[13:6] = lcd_data_host; // ss7
+        gpio_out[32:29] = host_col; // left[4:1]
         final_row1 = host_row1;
         final_row2 = host_row2;
         final_state = 8'b01001000;
     end
 end
 
-clock_divider clock_div (.clk (hz10M), .nRst (~reset), .clear (~reset), .max (30'd100000), .at_max (new_clk));
+    clock_divider clock_div (.clk (clk), .nRst (~nrst), .clear (~nrst), .max (30'd100000), .at_max (new_clk));
 
 // ***********
 // Player Side
@@ -101,38 +86,36 @@ logic [7:0] final_state;
 logic [7:0] lcd_data_player, lcd_data_host;
 logic [3:0] play_col, host_col;
 
-keypad_controller keypadplayer (.mode(pb[19]), .clk(hz10M), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
-keypad_fsm keypadFSMPlayer (.clk(hz10M), .nRst(~reset), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
+    keypad_controller keypadplayer (.mode(gpio_in[33]), .clk(clk), .nRst(~nrst), .read_row(gpio_in[24:21]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
+keypad_fsm keypadFSMPlayer (.clk(clk), .nRst(~nrst), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 
-disp_fsm dispFSM (.clk(hz10M), .nRst(~reset), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
+disp_fsm dispFSM (.clk(clk), .nRst(~nrst), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
 
-msg_reg message_reg (.clk(hz10M), .nRst(~reset), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
+    msg_reg message_reg (.clk(clk), .nRst(~nrst), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(gpio_out[16]), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
 
-uart_Tx uart_transmitter (.clk(hz10M), .nRst(~reset), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(left[0]));
+    uart_Tx uart_transmitter (.clk(clk), .nRst(~nrst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(gpio_out[25]));
 
-lcd_controller lcdPlayer (.clk(hz10M), .rst(~reset), .row_1({final_row1[119:0], final_state}), .row_2(final_row2), .lcd_en(left[7]), .lcd_rw(left[6]), .lcd_rs(left[5]), .lcd_data(lcd_data_player), .strobe(strobe_player));
+    lcd_controller lcdPlayer (.clk(clk), .rst(~nrst), .row_1({final_row1[119:0], final_state}), .row_2(final_row2), .lcd_en(gpio_out[28]), .lcd_rw(gpio_out[27]), .lcd_rs(gpio_out[26]), .lcd_data(lcd_data_player), .strobe(strobe_player));
 
 
 // *********
 // Host Side
 // *********
 
-keypad_controller keypadHostt (.clk(hz10M), .mode(~pb[19]), .nRst(~reset), .read_row(pb[7:4]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(host_col), .enable(new_clk));
-keypad_fsm keypadFSMHost (.clk(hz10M), .nRst(~reset), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
+    keypad_controller keypadHostt (.clk(clk), .mode(~gpio_in[33]), .nRst(~nrst), .read_row(gpio_in[24:21]), .cur_key(cur_key_host), .strobe(strobe_host), .scan_col(host_col), .enable(new_clk));
+keypad_fsm keypadFSMHost (.clk(clk), .nRst(~nrst), .strobe(strobe_host), .cur_key(cur_key_host), .ready(key_ready), .data(setLetter), .game_end(gameEnd_host), .toggle_state(toggle_state_host));
 
-host_msg_reg host_message_reg (.clk(hz10M), .nRst(~reset), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
+host_msg_reg host_message_reg (.clk(clk), .nRst(~nrst), .key_ready(key_ready), .toggle_state(toggle_state_host), .setLetter(setLetter), .rec_ready(rec_ready_host), .temp_word(temp_word), .gameEnd_host(gameEnd_host));
 
-uart_Rx uart_receiver (.clk(hz10M), .nRst(~reset), .rx_serial(pb[18]), .rec_ready(rec_ready_host), .rx_ready(rx_ready), .rx_byte(rx_byte), 
-.error_led(right[0]));
+    uart_Rx uart_receiver (.clk(clk), .nRst(~nrst), .rx_serial(gpio_in[20]), .rec_ready(rec_ready_host), .rx_ready(rx_ready), .rx_byte(rx_byte), 
+                           .error_led(gpio_out[19]));
 
-buffer buffer (.clk(hz10M), .nRst(~reset), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
+buffer buffer (.clk(clk), .nRst(~nrst), .Rx_byte(rx_byte), .rx_ready(rx_ready), .game_rdy(game_rdy), .guess(guess));
 
-game_logic gamelogic (.clk(hz10M), .nRst(~reset), .guess(guess), .setWord(temp_word), .toggle_state(toggle_state_host), .letter(letter), .red(red), .green(green),
+    game_logic gamelogic (.clk(clk), .nRst(~nrst), .guess(guess), .setWord(temp_word), .toggle_state(toggle_state_host), .letter(letter), .red(gpio_out[18]), .green(gpio_out[17]),
 .mistake(mistake), .red_busy(red_busy), .game_rdy(game_rdy), .incorrect(incorrect), .correct(correct), .indexCorrect(indexCorrect), .gameEnd(gameEnd_host));
 
-host_disp hostdisp (.clk(hz10M), .nRst(~reset), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
-
-endmodule
+host_disp hostdisp (.clk(clk), .nRst(~nrst), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
 module clock_divider (
   input logic clk, nRst, clear,
