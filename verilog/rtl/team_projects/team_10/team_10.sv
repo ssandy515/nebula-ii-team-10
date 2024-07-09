@@ -1444,3 +1444,4 @@ module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
     end
 endmodule
 */
+endmodule
