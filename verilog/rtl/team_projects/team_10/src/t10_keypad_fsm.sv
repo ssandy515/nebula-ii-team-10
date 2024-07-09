@@ -36,7 +36,7 @@ module t10_keypad_fsm (
   localparam key_D = 8'b00010001; // R3 C3
 
   // Handle ASCII character conversion
-  function logic[7:0] ascii_character ( input[3:0] row, input [3:0] col, input [2:0] state);
+  function logic[7:0] ascii_character (input[3:0] row, input [3:0] col, input [2:0] cur_state);
     ascii_character = 8'd0;
 
     if (row[3]) begin // "0" - 1000
@@ -62,8 +62,8 @@ module t10_keypad_fsm (
         ascii_character = 8'd87;
     end
     
-    if ((1 <= state) && (state <= 4)) begin // S0 through S3
-      ascii_character += ({5'd0, state} - 8'd1);
+    if ((1 <= cur_state) && (cur_state <= 4)) begin // S0 through S3
+      ascii_character += ({5'd0, cur_state} - 8'd1);
     end
   endfunction
 
