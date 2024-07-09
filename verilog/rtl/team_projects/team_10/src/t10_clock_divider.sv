@@ -1,24 +1,27 @@
-module clock_divider (
-  input logic clk, nRst,
-  input logic [16:0] max,
+module t10_clock_divider (
+  input logic clk, nRst, clear,
+  input logic [29:0] max,
   output logic at_max
 );
-  logic [16:0] next_count, time_o;
+  logic [29:0] next_count, count;
   
   always_ff @(posedge clk, negedge nRst) begin
     if (~nRst)
-      time_o <= 0;
+      count <= 0;
     else
-      time_o <= next_count;
+      count <= next_count;
   end
 
-  // Next state logic
-  assign at_max = (time_o == max);
+  always_comb begin  
+    at_max = (count == max);
+    next_count = count;
 
-  always_comb begin    
-    if (~nRst)
+    if (clear)
+      next_count = 0;
+
+    if (at_max)
       next_count = 0;
     else
-      next_count = (at_max) ? (0) : (time_o + 1);
+      next_count = count + 1;
   end
 endmodule
