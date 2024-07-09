@@ -31,7 +31,11 @@ module team_10 (
 
     // All outputs must have a value even if not used
     assign la_data_out = 128'b0;
-    assign gpio_out = 34'b0; //Inputs, but set low anyways
+    assign gpio_out[33] = 1'b0;
+    assign gpio_out[24:20] = 5'd0; //Inputs, but set low anyways
+    assign gpio_out[15:14] = 2'd0;
+    assign gpio_out[5:0] = 6'd0;
+
     assign gpio_oeb = (en) ? (34'b1000000001111100001100000000111111) : (34'b1111111111111111111111111111111111); //All 1's inputs
     
     /*
@@ -69,7 +73,7 @@ always_comb begin
         final_row2 = play_row2;
         final_state = 8'b01010000;
     end else begin
-        gpio_out[13:6] = lcd_data_host; // ss7
+        //gpio_out[13:6] = lcd_data_host; // ss7
         gpio_out[32:29] = host_col; // left[4:1]
         final_row1 = host_row1;
         final_row2 = host_row2;
@@ -83,7 +87,7 @@ t10_clock_divider clock_div (.clk (clk), .nRst (~nrst), .clear (~nrst), .max (30
 // Player Side
 // ***********
 logic [7:0] final_state;
-logic [7:0] lcd_data_player, lcd_data_host;
+logic [7:0] lcd_data_player;//, lcd_data_host;
 logic [3:0] play_col, host_col;
 logic blue;
 

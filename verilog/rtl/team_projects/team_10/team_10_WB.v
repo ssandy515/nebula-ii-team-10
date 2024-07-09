@@ -40,6 +40,7 @@ module team_10_WB (
 	output	wire	[34-1:0]	gpio_oeb
 );
 
+	assign IRQ = 0;
 	localparam	EN_VAL_REG_OFFSET = `WB_AW'h300A0000;
 
         wire clk_g;
