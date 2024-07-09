@@ -1,4 +1,4 @@
-module game_logic (
+module t10_game_logic (
     input logic clk, nRst, gameEnd,
     input logic [7:0] guess,
     input logic [39:0] setWord,
