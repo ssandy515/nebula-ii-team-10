@@ -30,7 +30,7 @@ always_comb begin
         IDLE: begin 
             tx_byte = msg;
             tx_ctrl = 0;
-            blue = 0;
+            blue = 1'b0;
             if (ready) begin
                 msg_rdy = data;
                 next_state = WAIT;
@@ -40,7 +40,7 @@ always_comb begin
         WAIT: begin 
             tx_ctrl = 1;
             tx_byte = msg;
-            blue = 0;
+            blue = 1'b0;
             msg_rdy = msg;
             if (transmit_ready)
                 next_state = TRANSMIT;
@@ -51,13 +51,13 @@ always_comb begin
             msg_rdy = msg;
             tx_byte = msg;
             tx_ctrl = 1;
-            blue = 1;
+            blue = 1'b1;
             next_state = IDLE;
         end
         default: begin
             next_state = IDLE;
             tx_byte = 8'b0;
-            blue = 0;
+            blue = 1'b0;
             tx_ctrl = 0;
             msg_rdy = 0;
         end
