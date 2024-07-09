@@ -26,7 +26,7 @@
 
 // `include			"wb_wrapper.vh"
 
-module sample_team_proj_WB (
+module team_10_WB (
 	`WB_SLAVE_PORTS,
 	input	wire	[128-1:0]	la_data_in,
 	output	wire	[128-1:0]	la_data_out,
@@ -81,7 +81,7 @@ module sample_team_proj_WB (
 
 	assign IRQ = |MIS_REG;
 
-	sample_team_proj instance_to_wrap (
+	team_10 instance_to_wrap (
 		.clk(clk),
 		.nrst(nrst),
 		.en(en),
