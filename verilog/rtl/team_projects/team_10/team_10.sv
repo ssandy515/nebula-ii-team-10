@@ -85,13 +85,16 @@ t10_clock_divider clock_div (.clk (clk), .nRst (~nrst), .clear (~nrst), .max (30
 logic [7:0] final_state;
 logic [7:0] lcd_data_player, lcd_data_host;
 logic [3:0] play_col, host_col;
+logic blue;
 
 t10_keypad_controller keypadplayer (.mode(gpio_in[33]), .clk(clk), .nRst(~nrst), .read_row(gpio_in[24:21]), .cur_key(cur_key_player), .strobe(strobe_player), .scan_col(play_col), .enable(new_clk));
 t10_keypad_fsm keypadFSMPlayer (.clk(clk), .nRst(~nrst), .strobe(strobe_player), .cur_key(cur_key_player), .ready(ready), .data(msg), .game_end(gameEnd_player), .toggle_state(useless));
 t10_disp_fsm dispFSM (.clk(clk), .nRst(~nrst), .ready(ready), .msg(msg), .row1(play_row1), .row2(play_row2), .gameEnd(gameEnd_player));
-t10_msg_reg message_reg (.clk(clk), .nRst(~nrst), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(gpio_out[16]), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
+t10_msg_reg message_reg (.clk(clk), .nRst(~nrst), .ready(ready), .transmit_ready(transmit_ready), .data(msg), .blue(blue), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte));
 t10_uart_Tx uart_transmitter (.clk(clk), .nRst(~nrst), .tx_ctrl(tx_ctrl), .tx_byte(tx_byte), .transmit_ready(transmit_ready), .tx_serial(gpio_out[25]));
 t10_lcd_controller lcdPlayer (.clk(clk), .rst(~nrst), .row_1({final_row1[119:0], final_state}), .row_2(final_row2), .lcd_en(gpio_out[28]), .lcd_rw(gpio_out[27]), .lcd_rs(gpio_out[26]), .lcd_data(lcd_data_player), .strobe(strobe_player));
+
+assign gpio_out[16] = blue;
 
 // *********
 // Host Side
