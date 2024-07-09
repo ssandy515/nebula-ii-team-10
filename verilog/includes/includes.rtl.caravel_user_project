@@ -47,6 +47,22 @@
 -v $(USER_PROJECT_VERILOG)/rtl/sample_team_proj/src/decoder_for_GPIO.sv
 -v $(USER_PROJECT_VERILOG)/rtl/sample_team_proj/src/flex_counter.sv
 
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/team_10_Wrapper.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/team_10.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_buffer.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_clock_divider.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_disp_fsm.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_game_logic.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_host_disp.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_host_msg_reg.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_keypad_controller.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_keypad_fsm.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_lcd_controller.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_main.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_msg_reg.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_uart_Rx.sv
+-v $(USER_PROJECT_VERILOG)/rtl/team_projects/team_10/src/t10_uart_Tx.sv
+
 # SRAM
 -v $(USER_PROJECT_VERILOG)/../ip/EF_SRAM_1024x32/hdl/SRAM_1024x32.v
 -v $(USER_PROJECT_VERILOG)/../ip/EF_SRAM_1024x32/hdl/ram_controller.v
