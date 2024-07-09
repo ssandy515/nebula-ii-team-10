@@ -1,4 +1,4 @@
-module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
+module t10_lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
     input clk,
     input rst,
     // Data to be displayed
@@ -226,5 +226,4 @@ module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
         else
             lcd_data <= lcd_data ;
     end
-
 endmodule
