@@ -1,4 +1,4 @@
-module host_disp (
+module t10_host_disp (
     input logic clk, nRst,
     input logic [4:0] indexCorrect,
     input logic [7:0] letter, setLetter,
