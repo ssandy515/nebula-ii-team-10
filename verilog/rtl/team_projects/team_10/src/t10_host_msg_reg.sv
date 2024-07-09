@@ -1,4 +1,4 @@
-module host_msg_reg (
+module t10_host_msg_reg (
     input logic clk, nRst, toggle_state, key_ready, gameEnd_host,
     input logic [7:0] setLetter,
     output logic rec_ready,
@@ -49,4 +49,4 @@ always_comb begin
         next_temp_word = 40'b0101111101011111010111110101111101011111;
     end
 end 
-endmodule 
+endmodule
