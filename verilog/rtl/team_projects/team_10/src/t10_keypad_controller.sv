@@ -1,4 +1,4 @@
-module keypad_controller (
+module t10_keypad_controller (
   input logic clk, nRst, enable, mode,
   input logic [3:0] read_row,
   output logic [7:0] cur_key, // Input for keypad_fsm
@@ -26,7 +26,7 @@ module keypad_controller (
       Q0 <= read_row;
       Q1 <= Q0;
       Q1_delay <= Q1;
-      strobe<= strobe_next;
+      strobe <= strobe_next;
 
       // Active column changes every clock cycle
       scan_col <= scan_col_next;
