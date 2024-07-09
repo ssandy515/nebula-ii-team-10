@@ -22,7 +22,7 @@
 // `timescale			1ns/1ps
 `default_nettype	none
 
-`define				WB_AW		16
+`define				WB_AW		32
 
 // `include			"wb_wrapper.vh"
 
