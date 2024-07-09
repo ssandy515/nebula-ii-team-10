@@ -1,7 +1,4 @@
-/* Message Register File
-Descriuption: x
-*/
-module msg_reg (
+module t10_msg_reg (
     input logic clk, nRst, ready, transmit_ready,
     input logic [7:0] data,
     output logic blue, tx_ctrl,
