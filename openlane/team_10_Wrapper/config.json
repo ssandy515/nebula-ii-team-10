@@ -15,7 +15,6 @@
         "dir::../../verilog/rtl/team_projects/team_10/src/t10_keypad_controller.sv",
         "dir::../../verilog/rtl/team_projects/team_10/src/t10_keypad_fsm.sv",
         "dir::../../verilog/rtl/team_projects/team_10/src/t10_lcd_controller.sv",
-        "dir::../../verilog/rtl/team_projects/team_10/src/t10_main.sv",
         "dir::../../verilog/rtl/team_projects/team_10/src/t10_msg_reg.sv",
         "dir::../../verilog/rtl/team_projects/team_10/src/t10_uart_Rx.sv",
         "dir::../../verilog/rtl/team_projects/team_10/src/t10_uart_Tx.sv"
