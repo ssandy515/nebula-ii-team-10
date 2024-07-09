@@ -1,8 +1,4 @@
-/* Display FSM File
-Descriuption: x
-*/
-
-module disp_fsm (
+module t10_disp_fsm (
     input logic clk, nRst, ready, gameEnd,
     input logic [7:0] msg,
     output logic [127:0] row1, row2
