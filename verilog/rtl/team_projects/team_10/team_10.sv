@@ -117,6 +117,7 @@ buffer buffer (.clk(clk), .nRst(~nrst), .Rx_byte(rx_byte), .rx_ready(rx_ready), 
 
 host_disp hostdisp (.clk(clk), .nRst(~nrst), .indexCorrect(indexCorrect), .letter(letter), .incorrect(incorrect), .correct(correct), .temp_word(temp_word), .setLetter(setLetter), .toggle_state(toggle_state_host), .gameEnd_host(gameEnd_host), .mistake(mistake), .top(host_row1), .bottom(host_row2));
 
+/*
 module clock_divider (
   input logic clk, nRst, clear,
   input logic [29:0] max,
@@ -1454,5 +1455,6 @@ module lcd_controller #(parameter clk_div = 20_000)( //100,000 -< 24k
     end
 
 endmodule
+*/
     
 endmodule
