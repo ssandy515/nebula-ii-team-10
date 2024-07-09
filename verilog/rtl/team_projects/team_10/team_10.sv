@@ -73,7 +73,7 @@ always_comb begin
         final_row2 = play_row2;
         final_state = 8'b01010000;
     end else begin
-        //gpio_out[13:6] = lcd_data_host; // ss7
+        gpio_out[13:6] = lcd_data_player; //lcd_data_host; // ss7
         gpio_out[32:29] = host_col; // left[4:1]
         final_row1 = host_row1;
         final_row2 = host_row2;
