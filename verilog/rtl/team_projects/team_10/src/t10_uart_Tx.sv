@@ -1,4 +1,4 @@
-module uart_Tx
+module t10_uart_Tx
 #(
     parameter Clkperbaud = 1041
 )
